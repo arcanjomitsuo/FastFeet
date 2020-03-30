@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import Recipient from '../models/Recipient';
 
 class RecipientController {
@@ -61,6 +62,57 @@ class RecipientController {
     const updatedRecipient = await recipient.update(req.body);
 
     return res.json(updatedRecipient);
+  }
+
+  async index(req, res) {
+    const { recipientName } = req.query;
+
+    const response = recipientName
+      ? await Recipient.findAll({
+          where: {
+            name: {
+              [Op.iLike]: `${recipientName}%`,
+            },
+          },
+          attributes: [
+            'id',
+            'name',
+            'street',
+            'number',
+            'complement',
+            'state',
+            'city',
+            'zip_code',
+          ],
+        })
+      : await Recipient.findAll({
+          attributes: [
+            'id',
+            'name',
+            'street',
+            'number',
+            'complement',
+            'state',
+            'city',
+            'zip_code',
+          ],
+        });
+
+    return res.json(response);
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    const recipient = await Recipient.findByPk(id);
+
+    if (!recipient) {
+      return res.status(401).json({ error: 'Recipient cannot exists.' });
+    }
+
+    await recipient.destroy();
+
+    return res.json({ message: 'Successful deleted.' });
   }
 }
 
