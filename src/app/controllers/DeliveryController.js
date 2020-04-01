@@ -7,6 +7,9 @@ import Deliveryman from '../models/Deliveryman';
 import Recipient from '../models/Recipient';
 import File from '../models/File';
 
+import Queue from '../../lib/Queue';
+import CreationDeliveryMail from '../jobs/CreationDeliveryMail';
+
 class DeliveryController {
   async store(req, res) {
     const schema = Yup.object().shape({
@@ -45,6 +48,12 @@ class DeliveryController {
       product,
       recipient_id,
       deliveryman_id,
+    });
+
+    await Queue.add(CreationDeliveryMail.key, {
+      deliveryman,
+      recipient: recipientExists,
+      product,
     });
 
     return res.json({
