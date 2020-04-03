@@ -9,6 +9,7 @@ import FileController from './app/controllers/FileController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliveryController from './app/controllers/DeliveryController';
 import DashboardController from './app/controllers/DashboardController';
+import DeliveryProblemController from './app/controllers/DeliveryProblemController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -45,5 +46,12 @@ routes.post('/deliveries', DeliveryController.store);
 routes.get('/deliveries', DeliveryController.index);
 routes.put('/deliveries/:id', DeliveryController.update);
 routes.delete('/deliveries/:id', DeliveryController.delete);
+
+// Rotas de entregas com problema
+routes.get('/deliveries/:id/problems', DeliveryProblemController.index);
+routes.get('/deliveries/problems', DeliveryProblemController.show);
+
+routes.post('/deliveries/:id/problems', DeliveryProblemController.store);
+routes.delete('/problem/:id/cancel-delivery', DeliveryProblemController.delete);
 
 export default routes;
