@@ -92,7 +92,6 @@ class DeliveryProblemController {
       }
     );
 
-    console.log('delivery', delivery.end_date);
     if (delivery.end_date !== null && delivery.signature_id !== null) {
       return res.status(400).json('This delivery already completed');
     }
